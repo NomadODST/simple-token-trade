@@ -116,4 +116,5 @@ class TradeApp extends Application {
 }
 
 /* Registrierung im Namespace */
-game.simpleTrade.TradeApp = TradeApp;
+globalThis.simpleTrade = globalThis.simpleTrade || {};
+globalThis.simpleTrade.TradeApp = TradeApp;
