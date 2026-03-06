@@ -1,34 +1,27 @@
 Hooks.once("ready",()=>{
 
- if(!game.simpleTrade) game.simpleTrade={};
+if(!game.simpleTrade.sessions)
+game.simpleTrade.sessions={};
 
- game.simpleTrade.sessions={};
+game.socket.on("module.simple-token-trade",(data)=>{
 
- game.socket.on("module.simple-token-trade",(data)=>{
+const session=game.simpleTrade.sessions[data.id];
 
-   const session=game.simpleTrade.sessions[data.id];
-   if(!session) return;
+if(!session) return;
 
-   session.receiveSocket(data);
+Object.assign(session,data.state);
 
- });
+session.app.render();
 
- game.simpleTrade.send=(payload)=>{
+});
 
-   game.socket.emit("module.simple-token-trade",payload);
+game.simpleTrade.sync=function(session){
 
- };
+game.socket.emit("module.simple-token-trade",{
+id:session.id,
+state:session.serialize()
+});
 
- game.simpleTrade.startSession=(a,b)=>{
-
-   const id=randomID();
-
-   const session=new game.simpleTrade.TradeApp(a,b,id);
-
-   game.simpleTrade.sessions[id]=session;
-
-   session.render(true);
-
- };
+};
 
 });
