@@ -3,6 +3,9 @@
   "title": "Simple Token Trade",
   "description": "Enables player-to-player and player-to-NPC trading of items and gold directly from the character sheet inventory.",
   "version": "1.0.0",
+  "url": "https://github.com/NomadODST/simple-token-trade",
+  "manifest": "https://raw.githubusercontent.com/NomadODST/simple-token-trade/main/module.json",
+  "download": "https://github.com/NomadODST/simple-token-trade/archive/refs/heads/main.zip",
   "compatibility": {
     "minimum": "12",
     "verified": "12",
@@ -10,7 +13,8 @@
   },
   "authors": [
     {
-      "name": "Custom Module"
+      "name": "NomadODST",
+      "url": "https://github.com/NomadODST"
     }
   ],
   "esmodules": [
@@ -26,3 +30,14 @@
   "languages": [],
   "flags": {}
 }
+```
+
+Die drei wichtigen Felder die gefehlt haben:
+
+- **`url`** – Projektseite, wird in Foundry's Modulübersicht angezeigt
+- **`manifest`** – die URL zu dieser `module.json` selbst, damit Foundry Updates erkennen kann
+- **`download`** – direkter ZIP-Download, den Foundry zum Installieren verwendet
+
+In Foundry kannst du das Modul jetzt über *Install Module → Manifest URL* mit diesem Link installieren:
+```
+https://raw.githubusercontent.com/NomadODST/simple-token-trade/main/module.json
