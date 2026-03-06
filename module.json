@@ -15,9 +15,9 @@
   "scripts": [
     "scripts/namespace.js",
     "scripts/trade-session.js",
-    "scripts/trade-socket.js",
     "scripts/trade-app.js",
-    "scripts/trade.js"
+    "scripts/trade-socket.js",
+    "scripts/inventory-trade.js"
   ],
   "styles": [
     "styles/trade.css"
