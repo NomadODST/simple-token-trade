@@ -1,26 +1,24 @@
 Hooks.once("ready", () => {
 
-  game.simpleTrade.startTrade = function(sourceToken) {
+  const ST = game.simpleTrade || globalThis.simpleTrade;
+
+  ST.startTrade = function (sourceToken) {
 
     if (!game.users.some(u => u.isGM && u.active)) {
-
       ui.notifications.warn("GM must be online for trading.");
       return;
-
     }
 
     const targets = canvas.tokens.controlled.filter(t => t.id !== sourceToken.id);
 
     if (!targets.length) {
-
       ui.notifications.warn("Select another token.");
       return;
-
     }
 
     const target = targets[0];
 
-    const session = new game.simpleTrade.TradeSession(
+    const session = new ST.TradeSession(
       sourceToken.actor,
       target.actor
     );
@@ -30,7 +28,6 @@ Hooks.once("ready", () => {
   };
 
 });
-
 
 /* Token HUD Button */
 
