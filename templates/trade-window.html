@@ -1,49 +1,70 @@
-<div class="trade-ui">
+<div class="trade-container">
 
-<div class="trade-columns">
+  <section class="trade-side">
 
-<div class="trade-side">
+    <h2>{{actorA.name}}</h2>
 
-<h2>{{a.name}}</h2>
+    <div class="inventory">
 
-<ul>
-{{#each itemsA}}
-<li class="item" data-id="{{this.id}}" data-side="A">
-<img src="{{this.img}}" width="24">
-{{this.name}}
-</li>
-{{/each}}
-</ul>
+      {{#each itemsA}}
 
-<label>Gold</label>
-<input class="gold-a" type="number" value="0">
+      <div class="item" data-id="{{this.id}}" data-side="A">
 
-<button class="accept-a">Accept</button>
+        <img src="{{this.img}}" width="24" height="24">
+        {{this.name}}
 
-</div>
+      </div>
 
-<div class="trade-side">
+      {{/each}}
 
-<h2>{{b.name}}</h2>
+    </div>
 
-<ul>
-{{#each itemsB}}
-<li class="item" data-id="{{this.id}}" data-side="B">
-<img src="{{this.img}}" width="24">
-{{this.name}}
-</li>
-{{/each}}
-</ul>
+    <div class="gold">
 
-<label>Gold</label>
-<input class="gold-b" type="number" value="0">
+      Gold:
+      <input class="gold-a" type="number" value="{{goldA}}" min="0">
 
-<button class="accept-b">Accept</button>
+    </div>
 
-</div>
+    <button class="accept-a">Accept</button>
 
-</div>
+  </section>
 
-<button class="cancel">Cancel Trade</button>
+
+  <section class="trade-side">
+
+    <h2>{{actorB.name}}</h2>
+
+    <div class="inventory">
+
+      {{#each itemsB}}
+
+      <div class="item" data-id="{{this.id}}" data-side="B">
+
+        <img src="{{this.img}}" width="24" height="24">
+        {{this.name}}
+
+      </div>
+
+      {{/each}}
+
+    </div>
+
+    <div class="gold">
+
+      Gold:
+      <input class="gold-b" type="number" value="{{goldB}}" min="0">
+
+    </div>
+
+    <button class="accept-b">Accept</button>
+
+  </section>
+
+  <div class="trade-controls">
+
+    <button class="cancel">Cancel</button>
+
+  </div>
 
 </div>
