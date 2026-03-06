@@ -1,8 +1,8 @@
 {
   "id": "lets-trade-fix",
   "title": "Let's Trade Fix (Tidy5e Compatibility)",
-  "description": "Removes the broken sheet injection from Lets Trade 5e that causes crashes with Tidy5e sheets. Trading functionality remains intact.",
-  "version": "1.0.0",
+  "description": "Prevents Lets Trade 5e from injecting UI elements into Tidy5e sheets, avoiding insertBefore crashes.",
+  "version": "1.0.1",
   "authors": [
     {
       "name": "Konstantin Zahn"
