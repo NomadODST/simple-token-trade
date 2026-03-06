@@ -1,17 +1,28 @@
 Hooks.once("ready", () => {
 
+  const ST = game.simpleTrade || globalThis.simpleTrade;
+
+  if (!ST) {
+    console.error("Simple Token Trade | Namespace missing");
+    return;
+  }
+
+  /* Socket Listener */
+
   game.socket.on("module.simple-token-trade", data => {
 
-    const session = game.simpleTrade.sessions[data.id];
+    const session = ST.sessions[data.id];
     if (!session) return;
 
     Object.assign(session, data.state);
 
-    session.app.render();
+    if (session.app) session.app.render();
 
   });
 
-  game.simpleTrade.sync = function(session) {
+  /* Sync Function */
+
+  ST.sync = function (session) {
 
     game.socket.emit("module.simple-token-trade", {
       id: session.id,
