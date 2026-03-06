@@ -1,7 +1,7 @@
 /**
  * simple-token-trade | inventory-trade.js
  * Hooks into the character sheet item context menu to offer a "Trade" option.
- * Compatible with: dnd5e default sheet, Tidy5e Sheet (tidy5e-sheet),
+ * Compatible with: dnd5e default sheet, Tidy5e Sheet (kgar + sdenec),
  *                  Character Sheet Plus, and other dnd5e-based sheets.
  */
 
@@ -10,35 +10,17 @@ import { TradeApp }     from "./trade-app.js";
 
 // ─── Item ID resolution (multi-sheet compatible) ──────────────────────────────
 
-/**
- * Extract an item ID from a context-menu list element.
- *
- * Different sheets store the item ID in different places:
- *   - dnd5e default:  data-item-id  (jQuery .data() or dataset)
- *   - Tidy5e v0.x:    data-item-id  (same, but wrapped in a deeper element)
- *   - Tidy5e v1.x+:   data-tidy-item-id  OR  closest [data-item-id]
- *   - fallback:       walk up the DOM looking for any known attribute
- *
- * @param {jQuery|HTMLElement} li
- * @returns {string|null}
- */
 function _resolveItemId(li) {
-  // Normalise: accept both jQuery objects and raw HTMLElements
   const el = li instanceof jQuery ? li[0] : li;
 
-  // 1) Standard dnd5e attribute on the element itself
   if (el.dataset?.itemId)      return el.dataset.itemId;
-
-  // 2) Tidy5e v1.x dedicated attribute
   if (el.dataset?.tidyItemId)  return el.dataset.tidyItemId;
 
-  // 3) jQuery .data() cache (may differ from dataset after dynamic updates)
   if (li instanceof jQuery) {
     const jqId = li.data("item-id") ?? li.data("tidy-item-id");
     if (jqId) return String(jqId);
   }
 
-  // 4) Walk up the DOM – Tidy5e sometimes puts the attribute on a parent row
   const ancestor = el.closest(
     "[data-item-id], [data-tidy-item-id], [data-entry-id]"
   );
@@ -54,26 +36,57 @@ function _resolveItemId(li) {
   return null;
 }
 
-// ─── Context Menu Hook ───────────────────────────────────────────────────────
+// ─── Context Menu Hooks ───────────────────────────────────────────────────────
 
-Hooks.on("getActorSheetItemContextOptions", (sheet, options) => {
-  options.push({
+function _buildTradeEntry(resolveActor, resolveItemId_fn) {
+  return {
     name: "Trade",
     icon: '<i class="fas fa-exchange-alt"></i>',
     condition: (li) => {
-      const itemId = _resolveItemId(li);
-      if (!itemId) return false;
-      const item = sheet.actor?.items?.get(itemId);
+      const actor  = resolveActor(li);
+      const itemId = resolveItemId_fn(li);
+      if (!actor || !itemId) return false;
+      const item = actor.items.get(itemId);
       if (!item) return false;
       const TRADEABLE = new Set([
         "weapon","equipment","consumable","tool","loot","container","backpack"
       ]);
-      return TRADEABLE.has(item.type) && sheet.actor.isOwner;
+      return TRADEABLE.has(item.type) && actor.isOwner;
     },
     callback: (li) => {
-      const itemId = _resolveItemId(li);
-      if (!itemId) return;
-      _openTradeDialog(sheet.actor, itemId);
+      const actor  = resolveActor(li);
+      const itemId = resolveItemId_fn(li);
+      if (!actor || !itemId) return;
+      _openTradeDialog(actor, itemId);
+    },
+  };
+}
+
+// ── Hook 1: Default dnd5e sheet ───────────────────────────────────────────────
+Hooks.on("getActorSheetItemContextOptions", (sheet, options) => {
+  options.push(_buildTradeEntry(
+    () => sheet.actor,
+    (li) => _resolveItemId(li)
+  ));
+});
+
+// ── Hook 2: Tidy5e sheet (kgar) – fires dnd5e.getItemContextOptions ───────────
+// Signature: (item, options) — item is the Item document directly
+Hooks.on("dnd5e.getItemContextOptions", (item, options) => {
+  const actor = item?.parent;
+  if (!actor || actor.documentName !== "Actor") return;
+
+  options.push({
+    name: "Trade",
+    icon: '<i class="fas fa-exchange-alt"></i>',
+    condition: () => {
+      const TRADEABLE = new Set([
+        "weapon","equipment","consumable","tool","loot","container","backpack"
+      ]);
+      return TRADEABLE.has(item.type) && actor.isOwner;
+    },
+    callback: () => {
+      _openTradeDialog(actor, item.id);
     },
   });
 });
