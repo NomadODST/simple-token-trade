@@ -1,36 +1,58 @@
-.trade-ui{
+.trade-container{
 display:flex;
-flex-direction:column;
-gap:10px;
-}
-
-.trade-columns{
-display:flex;
-gap:20px;
+gap:12px;
+padding:8px;
 }
 
 .trade-side{
 flex:1;
-background:#2b2b2b;
-padding:10px;
-border-radius:8px;
+background:#1e1e1e;
+border:1px solid #555;
+border-radius:6px;
+padding:8px;
 }
 
-.trade-side ul{
-list-style:none;
-padding:0;
-max-height:300px;
+.inventory{
+max-height:420px;
 overflow-y:auto;
 }
 
-.trade-side li{
+.item{
 display:flex;
 align-items:center;
-gap:6px;
+gap:8px;
 padding:4px;
+border-bottom:1px solid #333;
 cursor:pointer;
 }
 
-.trade-side li:hover{
-background:#3b3b3b;
+.item:hover{
+background:#2f2f2f;
+}
+
+.trade-icon{
+width:32px;
+height:32px;
+border:1px solid #000;
+}
+
+.trade-item-info{
+display:flex;
+flex-direction:column;
+}
+
+.trade-name{
+font-weight:600;
+}
+
+.trade-meta{
+font-size:11px;
+color:#aaa;
+}
+
+.trade-controls{
+display:flex;
+align-items:center;
+justify-content:center;
+padding:10px;
 }
