@@ -5,7 +5,7 @@
   "version": "1.0.0",
   "url": "https://github.com/NomadODST/simple-token-trade",
   "manifest": "https://raw.githubusercontent.com/NomadODST/simple-token-trade/main/module.json",
-  "download": "https://github.com/NomadODST/simple-token-trade/archive/refs/heads/main.zip",
+  "download": "https://github.com/NomadODST/simple-token-trade/releases/download/1.0.0/simple-token-trade.zip",
   "compatibility": {
     "minimum": "12",
     "verified": "12",
