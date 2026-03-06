@@ -31,15 +31,38 @@ Hooks.once("ready", () => {
 
 });
 
+
+/* Token HUD Button */
+
 Hooks.on("renderTokenHUD", (hud, html) => {
 
   const token = hud.object;
   if (!token.actor) return;
 
-  const btn = $(`<div class="control-icon trade"><i class="fas fa-handshake"></i></div>`);
+  const btn = $(`<div class="control-icon trade">
+    <i class="fas fa-handshake"></i>
+  </div>`);
 
   btn.click(() => game.simpleTrade.startTrade(token));
 
   html.find(".right").append(btn);
+
+});
+
+
+/* Token Right Click Menu */
+
+Hooks.on("getTokenContextOptions", (token, options) => {
+
+  options.push({
+    name: "Trade",
+    icon: '<i class="fas fa-handshake"></i>',
+    callback: li => {
+
+      const token = canvas.tokens.get(li.data("tokenId"));
+      game.simpleTrade.startTrade(token);
+
+    }
+  });
 
 });
