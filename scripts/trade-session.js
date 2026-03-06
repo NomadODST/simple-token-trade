@@ -1,8 +1,10 @@
+globalThis.simpleTrade = globalThis.simpleTrade || {};
+
 class TradeSession {
 
   constructor(actorA, actorB) {
 
-    this.id = randomID();
+    this.id = foundry.utils.randomID();
 
     this.actorA = actorA;
     this.actorB = actorB;
@@ -36,6 +38,4 @@ class TradeSession {
 
 }
 
-/* Registrierung im Namespace */
-globalThis.simpleTrade = globalThis.simpleTrade || {};
 globalThis.simpleTrade.TradeSession = TradeSession;
