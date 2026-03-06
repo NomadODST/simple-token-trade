@@ -20,7 +20,7 @@ class TradeSession {
 
   open() {
 
-    this.app = new game.simpleTrade.TradeApp(this);
+    this.app = new globalThis.simpleTrade.TradeApp(this);
     this.app.render(true);
 
     game.simpleTrade.sessions[this.id] = this;
