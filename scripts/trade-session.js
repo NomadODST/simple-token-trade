@@ -36,4 +36,5 @@ class TradeSession {
 
 }
 
+/* Registrierung im Namespace */
 game.simpleTrade.TradeSession = TradeSession;
