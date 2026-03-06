@@ -1,79 +1,155 @@
 <div class="trade-container">
 
-<div class="trade-side">
+  <!-- ═══ ACTOR A ══════════════════════════════════════════════════════════ -->
+  <div class="trade-side side-a {{#if isA}}is-mine{{/if}}">
+    <div class="actor-header">
+      <img src="{{actorA.img}}" class="actor-portrait" alt="{{actorA.name}}">
+      <span class="actor-name">{{actorA.name}}</span>
+    </div>
 
-<h2>{{actorA.name}}</h2>
+    {{#if isA}}
+    <div class="inventory-panel">
+      <div class="panel-label">Inventory</div>
+      <div class="inventory-list">
+        {{#each inventoryA}}
+        <div class="inv-item" data-item-id="{{id}}" title="{{name}} ({{quantity}})">
+          <img src="{{img}}" class="item-img" alt="{{name}}">
+          <span class="item-name">{{name}}</span>
+          <span class="item-qty">×{{quantity}}</span>
+        </div>
+        {{else}}
+        <div class="empty-msg">No tradeable items</div>
+        {{/each}}
+      </div>
+    </div>
+    {{/if}}
 
-<div class="inventory">
+    <div class="offer-panel trade-offer-drop">
+      <div class="panel-label">
+        Offer
+        {{#unless isA}}<span class="offer-hint">({{actorA.name}}'s offer)</span>{{/unless}}
+      </div>
+      <div class="offer-list">
+        {{#each offerA}}
+        <div class="offer-item" data-item-id="{{id}}">
+          <img src="{{img}}" class="item-img" alt="{{name}}">
+          <span class="item-name">{{name}}</span>
+          {{#if ../isA}}
+          <input type="number" class="qty-input" value="{{quantity}}" min="1">
+          <button class="remove-btn" title="Remove"><i class="fas fa-times"></i></button>
+          {{else}}
+          <span class="item-qty">×{{quantity}}</span>
+          {{/if}}
+        </div>
+        {{else}}
+        <div class="empty-msg">Nothing offered yet</div>
+        {{/each}}
+      </div>
+      <div class="gold-row">
+        <i class="fas fa-coins gold-icon"></i>
+        {{#if isA}}
+        <input id="goldA" type="number" class="gold-input" value="{{goldA}}" min="0" placeholder="GP">
+        {{else}}
+        <span class="gold-display">{{goldA}} gp</span>
+        {{/if}}
+      </div>
+    </div>
 
-{{#each itemsA}}
-<div class="item" data-id="{{id}}" data-side="A">
+    <div class="accept-row">
+      {{#if isA}}
+      <button class="accept-btn {{#if acceptA}}is-accepted{{/if}}">
+        {{#if acceptA}}<i class="fas fa-check-circle"></i> Accepted{{else}}<i class="far fa-circle"></i> Accept{{/if}}
+      </button>
+      {{else}}
+      <div class="accept-status {{#if acceptA}}is-accepted{{/if}}">
+        {{#if acceptA}}<i class="fas fa-check-circle"></i> {{actorA.name}} accepted{{else}}<i class="fas fa-clock"></i> Waiting…{{/if}}
+      </div>
+      {{/if}}
+    </div>
+  </div>
 
-<img src="{{img}}" class="trade-icon">
+  <!-- ═══ DIVIDER ══════════════════════════════════════════════════════════ -->
+  <div class="trade-divider">
+    <i class="fas fa-exchange-alt"></i>
+  </div>
 
-<div class="trade-item-info">
+  <!-- ═══ ACTOR B ══════════════════════════════════════════════════════════ -->
+  <div class="trade-side side-b {{#if isB}}is-mine{{/if}}">
+    <div class="actor-header">
+      <img src="{{actorB.img}}" class="actor-portrait" alt="{{actorB.name}}">
+      <span class="actor-name">{{actorB.name}}</span>
+    </div>
 
-<div class="trade-name">
-{{name}}
+    {{#if isB}}
+    <div class="inventory-panel">
+      <div class="panel-label">Inventory</div>
+      <div class="inventory-list">
+        {{#each inventoryB}}
+        <div class="inv-item" data-item-id="{{id}}" title="{{name}} ({{quantity}})">
+          <img src="{{img}}" class="item-img" alt="{{name}}">
+          <span class="item-name">{{name}}</span>
+          <span class="item-qty">×{{quantity}}</span>
+        </div>
+        {{else}}
+        <div class="empty-msg">No tradeable items</div>
+        {{/each}}
+      </div>
+    </div>
+    {{/if}}
+
+    <div class="offer-panel trade-offer-drop">
+      <div class="panel-label">
+        Offer
+        {{#unless isB}}<span class="offer-hint">({{actorB.name}}'s offer)</span>{{/unless}}
+      </div>
+      <div class="offer-list">
+        {{#each offerB}}
+        <div class="offer-item" data-item-id="{{id}}">
+          <img src="{{img}}" class="item-img" alt="{{name}}">
+          <span class="item-name">{{name}}</span>
+          {{#if ../isB}}
+          <input type="number" class="qty-input" value="{{quantity}}" min="1">
+          <button class="remove-btn" title="Remove"><i class="fas fa-times"></i></button>
+          {{else}}
+          <span class="item-qty">×{{quantity}}</span>
+          {{/if}}
+        </div>
+        {{else}}
+        <div class="empty-msg">Nothing offered yet</div>
+        {{/each}}
+      </div>
+      <div class="gold-row">
+        <i class="fas fa-coins gold-icon"></i>
+        {{#if isB}}
+        <input id="goldB" type="number" class="gold-input" value="{{goldB}}" min="0" placeholder="GP">
+        {{else}}
+        <span class="gold-display">{{goldB}} gp</span>
+        {{/if}}
+      </div>
+    </div>
+
+    <div class="accept-row">
+      {{#if isB}}
+      <button class="accept-btn {{#if acceptB}}is-accepted{{/if}}">
+        {{#if acceptB}}<i class="fas fa-check-circle"></i> Accepted{{else}}<i class="far fa-circle"></i> Accept{{/if}}
+      </button>
+      {{else}}
+      <div class="accept-status {{#if acceptB}}is-accepted{{/if}}">
+        {{#if acceptB}}<i class="fas fa-check-circle"></i> {{actorB.name}} accepted{{else}}<i class="fas fa-clock"></i> Waiting…{{/if}}
+      </div>
+      {{/if}}
+    </div>
+  </div>
 </div>
 
-<div class="trade-meta">
-Qty: {{quantity}} • Value: {{price}} gp
-</div>
-
-</div>
-
-</div>
-  
-{{/each}}
-
-</div>
-
-Gold:  
-<input class="gold-a" type="number" value="{{goldA}}" min="0">
-
-<button class="accept-a">Accept</button>
-
-</div>
-
-
-<div class="trade-side">
-
-<h2>{{actorB.name}}</h2>
-
-<div class="inventory">
-
-{{#each itemsB}}
-<div class="item" data-id="{{id}}" data-side="B">
-
-<img src="{{img}}" class="trade-icon">
-
-<div class="trade-item-info">
-
-<div class="trade-name">
-{{name}}
-</div>
-
-<div class="trade-meta">
-Qty: {{quantity}} • Value: {{price}} gp
-</div>
-
-</div>
-
-</div>
-{{/each}}
-
-</div>
-
-Gold:  
-<input class="gold-b" type="number" value="{{goldB}}" min="0">
-
-<button class="accept-b">Accept</button>
-
-</div>
-
-<div class="trade-controls">
-<button class="cancel">Cancel</button>
-</div>
-
+<!-- ═══ FOOTER ══════════════════════════════════════════════════════════════ -->
+<div class="trade-footer">
+  {{#if canExecute}}
+  <button class="execute-btn"><i class="fas fa-handshake"></i> Confirm Trade</button>
+  {{else if bothAccepted}}
+  <div class="waiting-execute"><i class="fas fa-spinner fa-spin"></i> Both accepted – waiting for {{actorA.name}} to confirm…</div>
+  {{else}}
+  <div class="waiting-accept"><i class="fas fa-clock"></i> Waiting for both players to accept…</div>
+  {{/if}}
+  <button class="cancel-btn"><i class="fas fa-times"></i> Cancel Trade</button>
 </div>
