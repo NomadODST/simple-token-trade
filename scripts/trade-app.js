@@ -11,9 +11,10 @@ class TradeApp extends Application {
     return foundry.utils.mergeObject(super.defaultOptions, {
       id: "trade-window",
       template: "modules/simple-token-trade/templates/trade-window.html",
-      width: 900,
-      height: 600,
-      resizable: true
+      width: 950,
+      height: 650,
+      resizable: true,
+      dragDrop: [{ dragSelector: ".item", dropSelector: ".trade-container" }]
     });
   }
 
@@ -29,7 +30,31 @@ class TradeApp extends Application {
       "backpack"
     ];
 
-    return actor.items.filter(i => allowed.includes(i.type));
+    return actor.items
+      .filter(i => allowed.includes(i.type))
+      .map(i => {
+
+        const qty = i.system.quantity ?? 1;
+
+        let price = 0;
+
+        if (i.system.price?.value)
+          price = i.system.price.value;
+
+        if (i.system.price?.gp)
+          price = i.system.price.gp;
+
+        return {
+          id: i.id,
+          name: i.name,
+          img: i.img,
+          quantity: qty,
+          price: price,
+          item: i
+        };
+
+      });
+
   }
 
   getData() {
@@ -56,6 +81,8 @@ class TradeApp extends Application {
   }
 
   activateListeners(html) {
+
+    super.activateListeners(html);
 
     const s = this.session;
 
@@ -104,29 +131,59 @@ class TradeApp extends Application {
 
   }
 
+  async _onDrop(event) {
+
+    const data = TextEditor.getDragEventData(event);
+
+    if (data.type !== "Item") return;
+
+    const item = await fromUuid(data.uuid);
+
+    if (!item) return;
+
+    const actor = item.parent;
+
+    const side = actor.id === this.session.actorA.id ? "A" : "B";
+
+    this.addItem(item.id, side);
+
+  }
+
   async addItem(itemId, side) {
 
     const s = this.session;
 
     const actor = side === "A" ? s.actorA : s.actorB;
-    const item = actor.items.get(itemId);
 
+    const item = actor.items.get(itemId);
     if (!item) return;
 
     const max = item.system.quantity ?? 1;
 
-    const qty = await Dialog.prompt({
+    let qty;
 
-      title: "Quantity",
-      content: `<input type="number" value="1" min="1" max="${max}">`,
-      callback: html => Number(html.find("input").val())
+    try {
 
-    });
+      qty = await Dialog.prompt({
+        title: "Quantity",
+        content: `<input type="number" value="1" min="1" max="${max}">`,
+        callback: html => Number(html.find("input").val())
+      });
+
+    } catch {
+      return;
+    }
 
     if (!qty || qty <= 0) return;
 
-    if (side === "A") s.offerA.push({ id: itemId, qty });
-    else s.offerB.push({ id: itemId, qty });
+    const offer = side === "A" ? s.offerA : s.offerB;
+
+    const existing = offer.find(o => o.id === itemId);
+
+    if (existing)
+      existing.qty += qty;
+    else
+      offer.push({ id: itemId, qty });
 
     s.resetAccept();
 
@@ -171,10 +228,24 @@ class TradeApp extends Application {
       const qty = o.qty;
       const current = item.system.quantity ?? 1;
 
-      const itemData = item.toObject();
-      itemData.system.quantity = qty;
+      const existing = toActor.items.find(i =>
+        i.name === item.name && i.type === item.type
+      );
 
-      await toActor.createEmbeddedDocuments("Item", [itemData]);
+      if (existing) {
+
+        await existing.update({
+          "system.quantity": (existing.system.quantity ?? 1) + qty
+        });
+
+      } else {
+
+        const itemData = item.toObject();
+        itemData.system.quantity = qty;
+
+        await toActor.createEmbeddedDocuments("Item", [itemData]);
+
+      }
 
       if (current > qty) {
 
@@ -197,29 +268,26 @@ class TradeApp extends Application {
     const a = session.actorA;
     const b = session.actorB;
 
-    const goldA = session.goldA;
-    const goldB = session.goldB;
-
-    if (goldA) {
+    if (session.goldA) {
 
       await a.update({
-        "system.currency.gp": a.system.currency.gp - goldA
+        "system.currency.gp": a.system.currency.gp - session.goldA
       });
 
       await b.update({
-        "system.currency.gp": b.system.currency.gp + goldA
+        "system.currency.gp": b.system.currency.gp + session.goldA
       });
 
     }
 
-    if (goldB) {
+    if (session.goldB) {
 
       await b.update({
-        "system.currency.gp": b.system.currency.gp - goldB
+        "system.currency.gp": b.system.currency.gp - session.goldB
       });
 
       await a.update({
-        "system.currency.gp": a.system.currency.gp + goldB
+        "system.currency.gp": a.system.currency.gp + session.goldB
       });
 
     }
