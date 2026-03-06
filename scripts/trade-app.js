@@ -47,7 +47,6 @@ class TradeApp extends Application {
 
       s.goldA = Number(ev.target.value);
       s.resetAccept();
-      game.simpleTrade.sync(s);
 
     });
 
@@ -55,7 +54,6 @@ class TradeApp extends Application {
 
       s.goldB = Number(ev.target.value);
       s.resetAccept();
-      game.simpleTrade.sync(s);
 
     });
 
@@ -63,7 +61,6 @@ class TradeApp extends Application {
 
       s.acceptA = true;
       this.checkTrade();
-      game.simpleTrade.sync(s);
 
     });
 
@@ -71,7 +68,6 @@ class TradeApp extends Application {
 
       s.acceptB = true;
       this.checkTrade();
-      game.simpleTrade.sync(s);
 
     });
 
@@ -101,8 +97,6 @@ class TradeApp extends Application {
 
     s.resetAccept();
 
-    game.simpleTrade.sync(s);
-
     this.render();
 
   }
@@ -121,4 +115,5 @@ class TradeApp extends Application {
 
 }
 
+/* Registrierung im Namespace */
 game.simpleTrade.TradeApp = TradeApp;
