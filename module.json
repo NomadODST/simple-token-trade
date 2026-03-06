@@ -1,28 +1,28 @@
 {
   "id": "simple-token-trade",
   "title": "Simple Token Trade",
-  "description": "MMO style token trading system for DnD5e.",
-  "version": "3.5.2",
-  "authors": [
-    {
-      "name": "NomadODST"
-    }
-  ],
+  "description": "Enables player-to-player and player-to-NPC trading of items and gold directly from the character sheet inventory.",
+  "version": "1.0.0",
   "compatibility": {
     "minimum": "12",
-    "verified": "12"
+    "verified": "12",
+    "maximum": "13"
   },
-  "scripts": [
+  "authors": [
+    {
+      "name": "Custom Module"
+    }
+  ],
+  "esmodules": [
     "scripts/namespace.js",
     "scripts/trade-session.js",
-    "scripts/trade-app.js",
     "scripts/trade-socket.js",
+    "scripts/trade-app.js",
     "scripts/inventory-trade.js"
   ],
   "styles": [
-    "styles/trade.css"
+    "trade.css"
   ],
-  "url": "https://github.com/NomadODST/simple-token-trade",
-  "manifest": "https://raw.githubusercontent.com/NomadODST/simple-token-trade/main/module.json",
-  "download": "https://github.com/NomadODST/simple-token-trade/archive/refs/heads/main.zip"
+  "languages": [],
+  "flags": {}
 }
